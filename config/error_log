@@ -1,0 +1,18 @@
+[07-Jan-2025 12:06:22 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:07:29 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:07:30 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:07:42 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:07:49 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:09:42 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:09:48 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:12:44 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:21:19 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:21:36 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:23:06 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:23:08 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:23:08 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:24:21 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[07-Jan-2025 12:24:22 America/New_York] PHP Warning:  mysqli_error() expects parameter 1 to be mysqli, boolean given in /home/osafactc2/public_html/desarrollo/avicentromovil/config/conexion.php on line 12
+[01-Feb-2025 03:16:35 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/2002): No such file or directory in /home/osafactc2/public_html/desarrollo/avicentromovil/config/consultamovil.php on line 9
+[01-Feb-2025 03:16:35 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/2002): No such file or directory in /home/osafactc2/public_html/desarrollo/avicentromovil/config/consultamovil.php on line 9
+[01-Feb-2025 03:16:35 America/New_York] PHP Warning:  mysqli::__construct(): (HY000/2002): No such file or directory in /home/osafactc2/public_html/desarrollo/avicentromovil/config/consultamovil.php on line 9
