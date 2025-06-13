@@ -94,30 +94,7 @@
 									?>
 								</select>
 							</div>
-								<div class="form-group row">
-			<label class="col-md-1 control-label">Almacen</label>
-			<div class="col-md-2">
-				<select class="form-control input-sm" id="id_almacen">
-					<?php
-						$sqlAlmacen = "SELECT * FROM cji_almacen WHERE ALMAC_FlagEstado = 1 ORDER BY ALMAC_Descripcion";
-						$almac=mysqli_query($con,$sqlAlmacen);
-						while ($rw=mysqli_fetch_array($almac)){
-							$id_almacen=$rw["ALMAP_Codigo"];
-							$desc_almacen=$rw["ALMAC_Descripcion"];
-							if ($id_almacen==1){
-								$selected="selected";
-							} else {
-								$selected="";
-							}
-					?>
-					<option value="<?php echo $id_almacen?>" <?php echo $selected;?>><?php echo $desc_almacen?></option>
-					<?php
-						}
-					?>
-				</select>
-			</div>
-			
-		</div>  
+							 
 							<label for="tel2" class="col-md-1 control-label">Rango de entrega</label>
 							<div class="col-md-2">
 								<input type="datetime-local" class="form-control input-sm" id="fechaEntMin" value="">
@@ -167,7 +144,31 @@
 						</button>
 					</div>	
 				</div>
+					<div class="form-group row">
+							<!-- Selección del almacén en nueva_factura.php -->
+						<label class="col-md-1 control-label">Almacen</label>
+						<div class="col-md-2">
+						<select class="form-control input-sm" id="id_almacen" onchange="actualizarProductos()">
+							<option value="1">Seleccionar Almacén</option> <!-- Opción vacía si no se selecciona un almacén -->
+							<?php
+							$sqlAlmacen = "SELECT * FROM cji_almacen WHERE ALMAC_FlagEstado = 1 ORDER BY ALMAC_Descripcion";
+							$almac = mysqli_query($con, $sqlAlmacen);
+							$almacenSeleccionado = isset($_GET['almacen']) ? $_GET['almacen'] : ''; // Obtener el valor del almacén desde la URL
+							while ($rw = mysqli_fetch_array($almac)) {
+								$id_almacen = $rw["ALMAP_Codigo"];
+								$desc_almacen = $rw["ALMAC_Descripcion"];
+								$selected = ($id_almacen == $almacenSeleccionado) ? "selected" : ""; // Marcar como seleccionado el almacén de la URL
+							?>
+								<option value="<?php echo $id_almacen ?>" <?php echo $selected; ?>><?php echo $desc_almacen ?></option>
+							<?php
+							}
+							?>
+						</select>
+
+						</div>
+                 	</div> 
 			</form>	
+			
 			<div class="clearfix"></div>
 		<div id="resultados" class='col-md-12' style="margin-top:10px"></div><!-- Carga los datos ajax -->			
 		</div>
@@ -336,6 +337,26 @@
 
 						}
 			});
+
+function actualizarProductos() {
+    var idAlmacen = $('#id_almacen').val();
+    console.log('idAlmacen:', idAlmacen);  // Verifica el valor
+    $.ajax({
+        url: 'ajax/productos_factura.php',
+        type: 'GET',
+        data: {
+            session: '<?php echo $session_id; ?>',
+            almacen: idAlmacen,
+            action: 'ajax'
+        },
+        success: function(response) {
+            $('#dataproducto').html(response);
+        }
+    });
+}
+
+
+
 	</script>
 	
   </body>
