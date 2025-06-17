@@ -17,12 +17,36 @@
 		$session = $_POST['session'];
 	}
 
+	   // Recibir el filtro de marca
+    $marca = '';
+    if (isset($_GET['marca'])) {
+        $marca = mysqli_real_escape_string($con, strip_tags($_GET['marca'], ENT_QUOTES));
+    } else if (isset($_POST['marca'])) {
+        $marca = mysqli_real_escape_string($con, strip_tags($_POST['marca'], ENT_QUOTES));
+    }
+
 	if ($action == 'ajax') {
 		// Escaping, adicionalmente eliminando todo lo que podría ser código (html/javascript)
+		$q = isset($_REQUEST['q']) ? mysqli_real_escape_string($con, strip_tags($_REQUEST['q'], ENT_QUOTES)) : '';
 		$aColumns = array('p.PROD_Codigo', 'p.PROD_Nombre'); // Columnas de búsqueda
-		$sTable = "cji_producto p";
+        $sTable = "cji_producto p LEFT JOIN cji_marca m ON p.MARCP_Codigo = m.MARCP_Codigo";
 		$sWhere = "WHERE PROD_FlagEstado != 0"; // Excluir productos con estado 0
 	
+		if (!empty($q)) {
+			$sWhere .= " AND (";
+			for ($i = 0; $i < count($aColumns); $i++) {
+				$sWhere .= $aColumns[$i] . " LIKE '%" . $q . "%' OR ";
+			}
+			$sWhere = substr_replace($sWhere, "", -3); // Eliminar el último 'OR'
+			$sWhere .= ')';
+		}
+		
+        // Filtro por marca (ajusta el nombre del campo si es diferente)
+        if (!empty($marca)) {
+            $sWhere .= " AND p.MARCP_Codigo = '$marca'";
+        }
+
+
 		// Obtener el id del almacén (por GET)
 	    $id_almacen = isset($_GET['almacen']) ? $_GET['almacen'] : 1;  
 		include 'pagination.php'; // Incluir archivo de paginación
@@ -51,6 +75,7 @@
 		    <table class="table">
 		        <tr class="warning">
 		            <th>Producto</th>
+		            <th>Marca</th>
 					<th></th>
 		        </tr>
 		        <?php
@@ -59,6 +84,7 @@
 		        	// Iterar a través de los productos obtenidos
 		        	while ($row = mysqli_fetch_array($query)) {
 						$id_producto = $row['PROD_Codigo'];
+					    $marca = $row['MARCC_Descripcion'];					
 						$nombre_producto = $row['PROD_Nombre'];
 						$detalle = $row['PROD_DescripcionBreve'];
 						
@@ -95,7 +121,7 @@
 
 		        <!-- Fila principal con el nombre del producto -->
 		        <tr>
-		            <td colspan="2">
+		            <td>
 		                <div>
 		                    <strong><?= $producto_y_detalle ?></strong><br>
 		                    <span>Stock Disponible: <?= $StockDisponible ?></span><br>
@@ -105,6 +131,8 @@
 		                    </button>
 		                </div>
 		            </td>
+					    <!-- Marca alineada normalmente -->
+                <td><strong><?= $marca ?></strong></td>
 		        </tr>
 
 		        <!-- Fila oculta con los detalles -->
@@ -175,5 +203,7 @@ function toggleDetalle(id) {
         icono.classList.add('glyphicon-minus');
     }
 }  
+
+
 
 </script>

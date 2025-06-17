@@ -50,7 +50,10 @@
 		// escaping, additionally removing everything that could be (html/javascript-) code
          $q = mysqli_real_escape_string($con,(strip_tags($_REQUEST['q'], ENT_QUOTES)));
 		 $aColumns = array('PROD_CodigoInterno', 'PROD_Nombre');//Columnas de busqueda
-		 $sTable = "cji_producto p";
+		$sTable = "cji_producto p 
+           LEFT JOIN cji_marca m ON p.MARCP_Codigo = m.MARCP_Codigo 
+           LEFT JOIN cji_almacenproducto ap ON p.PROD_Codigo = ap.PROD_Codigo 
+           LEFT JOIN cji_almacen a ON ap.ALMAC_Codigo = a.ALMAP_Codigo";
 		 $sWhere = "";
 		if ( $_GET['q'] != "" )
 		{
@@ -62,6 +65,39 @@
 			$sWhere = substr_replace( $sWhere, "", -3 );
 			$sWhere .= ')';
 		}
+		$marca = '';
+		if (isset($_GET['marca'])) {
+			$marca = mysqli_real_escape_string($con, strip_tags($_GET['marca'], ENT_QUOTES));
+		} else if (isset($_POST['marca'])) {
+			$marca = mysqli_real_escape_string($con, strip_tags($_POST['marca'], ENT_QUOTES));
+		}
+
+		if (!empty($marca)) {
+			if ($sWhere == "") {
+				$sWhere = "WHERE p.MARCP_Codigo = '$marca'";
+			} else {
+				// Ya hay un WHERE, así que agrega AND
+				$sWhere .= " AND p.MARCP_Codigo = '$marca'";
+			}
+		}
+
+
+		$almacen = '';
+		if (isset($_GET['almacen'])) {
+			$almacen = mysqli_real_escape_string($con, strip_tags($_GET['almacen'], ENT_QUOTES));
+		} else if (isset($_POST['almacen'])) {
+			$almacen = mysqli_real_escape_string($con, strip_tags($_POST['almacen'], ENT_QUOTES));
+		}
+
+		if (!empty($almacen)) {
+			if ($sWhere == "") {
+				$sWhere = "WHERE ap.ALMAC_Codigo = '$almacen'";
+			} else {
+				// Ya hay un WHERE, así que agrega AND
+				$sWhere .= " AND a.ALMAP_Codigo = '$almacen'";
+			}
+		}
+
 		$sWhere.=" order by PROD_CodigoInterno desc";
 		include 'pagination.php'; //include pagination file
 		//pagination variables
@@ -76,7 +112,7 @@
 		$total_pages = ceil($numrows/$per_page);
 		$reload = './productos.php';
 		//main query to fetch the data
-		$sql="SELECT * FROM  $sTable $sWhere LIMIT $offset,$per_page";
+		$sql="SELECT p.*, m.MARCC_Descripcion FROM  $sTable $sWhere  LIMIT $offset,$per_page";
 		$query = mysqli_query($con, $sql);
 		//loop through fetched data
 		if ($numrows>0){
@@ -87,7 +123,9 @@
             <tr>
                 <th>Código</th>
                 <th>Producto</th>
+				<th>Marca</th>
                 <th class='text-right'>Stock Disponible</th>
+				<!-- <th class='text-right'>Stock Comprometido</th> -->
 				<?php
 					$sqlHead = "SELECT * FROM cji_tipocliente WHERE TIPCLIC_FlagEstado = 1";
 					$queryHead = mysqli_query($con, $sqlHead);
@@ -105,12 +143,14 @@
                 $id_producto = $row['PROD_Codigo'];
                 $codigo_producto = $row['PROD_CodigoInterno'];
                 $nombre_producto = $row['PROD_Nombre'];
+				$marca = $row['MARCC_Descripcion'];
                 $detalle = $row['PROD_DescripcionBreve'];
-                $queryGetStock = mysqli_query($con, "SELECT ALMPROD_Stock, ALMPROD_StockComprometido FROM cji_almacenproducto WHERE ALMAC_Codigo = 1 AND COMPP_Codigo = 1 AND PROD_Codigo = $id_producto");
+                $queryGetStock = mysqli_query($con, "SELECT ALMPROD_Stock, ALMPROD_StockComprometido FROM cji_almacenproducto WHERE ALMAC_Codigo = $almacen AND COMPP_Codigo = 1 AND PROD_Codigo = $id_producto");
 				while($gs = mysqli_fetch_array($queryGetStock)){
 					$stock = $gs['ALMPROD_Stock'];
 					$stockComp = $gs['ALMPROD_StockComprometido'];
 					$StockDisponible = $stock - $stockComp;
+					// $StockComprometido = $stockComp;
 				}
 				
 				
@@ -140,7 +180,9 @@
                 <tr>
                     <td><?php echo htmlspecialchars($codigo_producto); ?></td>
                     <td><?php echo htmlspecialchars($producto_con_detalle); ?></td>
+					<td><?php echo htmlspecialchars($marca); ?></td>
                     <td class='text-right'><?php echo htmlspecialchars($StockDisponible); ?></td>
+					<!-- <td class='text-right'><//?php echo htmlspecialchars($StockComprometido); ?></td> -->
 					<?php
 						$sqlPrecios = "SELECT * FROM cji_productoprecio pp WHERE PROD_Codigo = $id_producto AND MONED_Codigo = 1";
 						$queryPrecios = mysqli_query($con, $sqlPrecios);

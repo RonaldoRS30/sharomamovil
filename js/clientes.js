@@ -41,6 +41,7 @@ function eliminar(id) {
 
 
 $("#guardar_cliente").submit(function (event) {
+	event.preventDefault(); // Evita el envío por defecto
 	$('#guardar_datos').attr("disabled", true);
 
 	var parametros = $(this).serialize();
@@ -48,37 +49,56 @@ $("#guardar_cliente").submit(function (event) {
 		type: "POST",
 		url: "ajax/nuevo_cliente.php",
 		data: parametros,
-		beforeSend: function (objeto) {
+		dataType: "json", // Esperar JSON del servidor
+		beforeSend: function () {
 			$("#resultados_ajax").html("Mensaje: Cargando...");
 		},
 		success: function (datos) {
-			$("#resultados_ajax").html(datos);
+			// Rellenar campos en nueva_factura.php con datos recibidos
+			$("#id_cliente").val(datos.id_cliente);
+			$("#nombre_cliente").val(datos.nombre_cliente);
+			$("#ruc_cliente").val(datos.ruc_cliente);
+			// Reemplazar saltos de línea por espacios
+			// Reemplaza las secuencias literales '\r\n' por saltos de línea reales
+			// Reemplazar las secuencias literales '\r\n' por un espacio
+				var textoLimpio = datos.direc_cliente.replace(/\\r\\n/g, " ");
+
+				// Asignar el texto limpio al input o textarea
+				$("#direc_cliente").val(textoLimpio);
+
+
+
+			$("#resultados_ajax").html("Cliente registrado correctamente.");
 			$('#guardar_datos').attr("disabled", false);
-			load(1);
+			load(1); // Recarga la lista
 
-			// Limpiar el modal
-			$('#nombres').val('');
-			$('#apepa').val('');
-			$('#apema').val('');
-			$('#razon').val('');
-			$('#telefono').val('');
-			$('#numero_documento').val('');
-			$('#documento').val('');
-			$('#email').val('');
-			$('#direccion').val('');
-			$('#pais').val('');
+			// Mostrar alerta con SweetAlert
+			Swal.fire({
+				icon: 'success',
+				title: 'Cliente registrado',
+				text: 'El cliente fue añadido correctamente.',
+				timer: 2000,
+				showConfirmButton: false
+			});
 
-			// Mostrar el modal si no está abierto
-			$('#modal_cliente').modal('show'); // Asegúrate de que el ID de tu modal sea correcto
+			// Cerrar el modal
+			$('#nuevoCliente').modal('hide');
 
-			// Temporizador para ocultar el mensaje después de 3 segundos
+			// Limpiar campos del formulario
+			$('#guardar_cliente')[0].reset();
+
+			// Ocultar el mensaje de resultados
 			setTimeout(function () {
-				$("#resultados_ajax").fadeOut(500); // Ocultar el mensaje después de 3 segundos
+				$("#resultados_ajax").fadeOut(500);
 			}, 1000);
+		},
+		error: function (xhr, status, error) {
+			$("#resultados_ajax").html("Error al registrar cliente: " + error);
+			$('#guardar_datos').attr("disabled", false);
 		}
 	});
-	event.preventDefault();
 });
+
 
 
 

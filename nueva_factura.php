@@ -47,7 +47,8 @@
 			<form class="form-horizontal" role="form" id="datos_factura">
 				<div class="form-group row">
 				  <input type="hidden" id="hoy" name="hoy" value="<?=$hoy?>">
-				  <label for="nombre_cliente" class="col-md-1 control-label">Cliente*</label>
+				  <label for="nombre_cliente" class="col-md-1 control-label">
+					CLIENTE*</label>
 				  <div class="col-md-3">
 					  <input type="text" class="form-control input-sm" id="nombre_cliente" placeholder="Selecciona un cliente" required>
 					  <input id="id_cliente" type='hidden'>	
@@ -64,8 +65,25 @@
 							<div class="col-md-2">
 								<input type="text" class="form-control input-sm" id="direc_cliente" placeholder="Direccion" readonly>
 							</div> 
-								<button type='button' class="btn btn-info" data-toggle="modal" data-target="#nuevoCliente"><span
-							class="glyphicon glyphicon-plus"></span> Nuevo Cliente</button>	
+	
+	<style>
+				@media (max-width: 767px) {
+					.btn-responsive {
+					display: block;
+					width: 80%;
+					margin: 10px auto;
+					font-size: 16px;
+					max-width: 180px; /* para que no sea demasiado ancho */
+					}
+				}
+				</style>
+			<button type="button" class="btn btn-info btn-responsive" id="limpiar" name="limpiar">LIMPIAR</button>
+
+<button type="button" class="btn btn-info btn-responsive" data-toggle="modal" data-target="#nuevoCliente">
+  <span class="glyphicon glyphicon-plus"></span> Nuevo Cliente
+</button> 
+ 
+
 							
 				 </div>
 						<div class="form-group row">
@@ -94,7 +112,6 @@
 									?>
 								</select>
 							</div>
-							 
 							<label for="tel2" class="col-md-1 control-label">Rango de entrega</label>
 							<div class="col-md-2">
 								<input type="datetime-local" class="form-control input-sm" id="fechaEntMin" value="">
@@ -137,19 +154,12 @@
 						</div>-->
 				
 				
-				  <div class="col-md-12">
-					<div class="pull-right">
-						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
-						 <span class="glyphicon glyphicon-plus"></span> Agregar productos
-						</button>
-					</div>	
-				</div>
 					<div class="form-group row">
 							<!-- Selección del almacén en nueva_factura.php -->
 						<label class="col-md-1 control-label">Almacen</label>
 						<div class="col-md-2">
 						<select class="form-control input-sm" id="id_almacen" onchange="actualizarProductos()">
-							<option value="1">Seleccionar Almacén</option> <!-- Opción vacía si no se selecciona un almacén -->
+							<option value="0">Seleccionar Almacén</option> <!-- Opción vacía si no se selecciona un almacén -->
 							<?php
 							$sqlAlmacen = "SELECT * FROM cji_almacen WHERE ALMAC_FlagEstado = 1 ORDER BY ALMAC_Descripcion";
 							$almac = mysqli_query($con, $sqlAlmacen);
@@ -166,15 +176,22 @@
 						</select>
 
 						</div>
-                 	</div> 
+                 	</div>  
+						<div class="col-md-12">
+					<div class="pull-right">
+						<div>
+						<button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal">
+						 <span class="glyphicon glyphicon-plus"></span> Agregar productos
+						</button>
+						</div>
+					</div>	
+				</div>
+
 			</form>	
-			
 			<div class="clearfix"></div>
 		<div id="resultados" class='col-md-12' style="margin-top:10px"></div><!-- Carga los datos ajax -->			
 		</div>
 		<br>
-	
-
 		<div class="form-group row">
 			<label class="col-md-1 control-label">Forma de Pago:</label>
 			<div class="col-md-2">
@@ -291,7 +308,7 @@
 					</div><!-- Datos ajax Final -->
 				  </div>
 				  <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 					
 				  </div>
 				</div>
@@ -336,27 +353,58 @@
 							$('#direc_cliente').val(ui.item.direc_cliente);
 
 						}
-			});
+			}); 
 
-function actualizarProductos() {
-    var idAlmacen = $('#id_almacen').val();
-    console.log('idAlmacen:', idAlmacen);  // Verifica el valor
+			function actualizarProductos() {
+					var idAlmacen = $('#id_almacen').val();
+					console.log('idAlmacen:', idAlmacen);  // Verifica el valor
+					$.ajax({
+						url: 'ajax/productos_factura.php',
+						type: 'GET',
+						data: {
+							session: '<?php echo $session_id; ?>',
+							almacen: idAlmacen,
+							action: 'ajax'
+						},
+						success: function(response) {
+							$('#dataproducto').html(response);
+						}
+					});
+				}
+
+
+
+				   $("#limpiar").click(function() {
+    // Limpiar los valores de los campos del formulario
+    $("#marcaSelect").val("");  // Limpiar el campo de marca
+    $("#q").val("");            // Limpiar el campo de búsqueda
+    $("#id_almacen").val("");  // Establecer el valor predeterminado del almacén
+    
+    // Variables con valores vacíos o predeterminados
+    var q = $("#q").val();      // Capturar búsqueda (vacía)
+    var precioVenta = $("#precioVenta").val();  // Asegúrate de que este campo exista
+    var marca = $("#marcaSelect").val();        // Capturar marca (vacía)
+    var almacen = $("#id_almacen").val("#id_almacen");       // Capturar almacén (valor predeterminado)
+
+    // Construir la URL con los parámetros
+    var url = './ajax/productos_factura.php?action=ajax&page=1&q=' + q + '&precioVenta=' + precioVenta + '&marca=' + marca + '&almacen=' + almacen;
+
+    // Mostrar cargador mientras se actualizan los resultados
+    $("#loader").fadeIn('slow');
+
+    // Realizar la solicitud AJAX
     $.ajax({
-        url: 'ajax/productos_factura.php',
-        type: 'GET',
-        data: {
-            session: '<?php echo $session_id; ?>',
-            almacen: idAlmacen,
-            action: 'ajax'
+        url: url,  // Usar la URL construida
+        beforeSend: function(objeto) {
+            $('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');  // Mostrar mensaje de carga
         },
-        success: function(response) {
+        success: function(data) {
+            $(".outer_div").html(data).fadeIn('slow');  // Mostrar los resultados en la tabla
             $('#dataproducto').html(response);
+            $('#resultados').html('');
         }
     });
-}
-
-
-
+});
 	</script>
 	
   </body>

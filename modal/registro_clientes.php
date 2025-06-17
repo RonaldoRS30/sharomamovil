@@ -1,6 +1,8 @@
 <?php
 if (isset($con)) {
 ?>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- Modal -->
 <div class="modal fade" id="nuevoCliente" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
@@ -101,13 +103,13 @@ if (isset($con)) {
 						</div>
 					</div>
 
-					<!-- Email -->
-					<div class="form-group">
-						<label for="email" class="col-sm-3 control-label">Email</label>
-						<div class="col-sm-8">
-							<input type="email" class="form-control" id="email" name="email" />
-						</div>
-					</div>
+		         		<!-- Email -->
+						<!-- <div class="form-group">
+							<label for="email" class="col-sm-3 control-label">Email</label>
+							<div class="col-sm-8">
+								<input type="email" class="form-control" id="email" name="email">
+							</div>
+						</div> -->
 
 					<!-- Dirección -->
 					<div class="form-group">

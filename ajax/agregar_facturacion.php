@@ -162,7 +162,7 @@ if (isset($_GET['session'])) {
 
 $simbolo_moneda = get_row('cji_moneda', 'MONED_Simbolo', 'MONED_Codigo', 1);
 ?> 
-
+<div class="table-responsive-datatableProd">
 <table id="datatableProd" class="table"> 
 	<tr>
 		<th class='text-center'>CANT.</th>
@@ -275,4 +275,19 @@ $simbolo_moneda = get_row('cji_moneda', 'MONED_Simbolo', 'MONED_Codigo', 1);
 		</tr>
 	<?php } ?> 
 </table>
+</div>
 
+<style>
+	.table-responsive-datatableProd {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch; /* para scroll suave en iOS */
+}
+
+/* Opcional: que la tabla ocupe todo el ancho disponible */
+.table-responsive-datatableProd table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+</style>

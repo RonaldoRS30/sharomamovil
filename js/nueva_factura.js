@@ -7,10 +7,13 @@ function load(page) {
 	var q = $("#q").val();
 	var precioVenta = $("#precioVenta").val();
 	var session = $("#session").val();
+	var marca = $("#marcaSelect").val(); // 👈 obtenemos la marca
+    var almacen = $("#id_almacen").val();       // Capturar almacén (valor predeterminado)
 	$("#loader").fadeIn('slow');
+
 	$.ajax({
 		type: "POST",
-		url: './ajax/productos_factura.php?action=ajax&page=' + page + '&q=' + q + '&precioVenta=' + precioVenta,
+		url: './ajax/productos_factura.php?action=ajax&page=' + page + '&q=' + q + '&precioVenta=' + precioVenta + '&marca=' + marca + '&almacen=' + almacen,
 		data: '&session=' + session,
 		beforeSend: function (objeto) {
 			$('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');
@@ -18,10 +21,10 @@ function load(page) {
 		success: function (data) {
 			$(".outer_div").html(data).fadeIn('slow');
 			$('#loader').html('');
-
 		}
-	})
+	});
 }
+
 
 function agregar(id,session) {
 	var cantidad = document.getElementById('cantidad_' + id).value;
@@ -265,7 +268,7 @@ function guardar(session) {
 		type: "GET",
 		url: "./ajax/agregar_facturacion.php",
 		dataType: "json",
-		data: "session=" + session + "&id_cliente=" + id_cliente + "&id_vendedor=" + id_vendedor + "&id_almacen=" + id_almacen + "&ruc=" + ruc + "&dir=" + dir
+		data: "session=" + session + "&id_cliente=" + id_cliente + "&id_vendedor=" + id_vendedor + "&ruc=" + ruc + "&dir=" + dir
 		+ "&allcode=" + allcode + "&allcant=" + allcant + "&allnom=" + allnom + "&allpu=" + allpu + "&allpt=" + allpt + "&fechaEntMin=" + fechaEntMin + "&fechaEntMax=" + fechaEntMax + "&obs=" + obs
 		+ "&montoDefault=" + MontoIngresado + "&forpapDefault=" + ForpapDefault + "&montoMult=" + MontoArray + "&forpapMult=" + CodArray,
 		beforeSend: function (objeto) {
