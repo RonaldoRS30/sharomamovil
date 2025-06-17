@@ -29,7 +29,7 @@
 	?> 
     <div class="container">
 		<div class="panel panel-info">
-		<div class="panel-heading">
+		  <div class="panel-heading">
 		    <div class="btn-group pull-right">
 				<button type='button' class="btn btn-info" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus" ></span> Nuevo Usuario</button>
 			</div>
@@ -52,9 +52,9 @@
 							
 							
 							<div class="col-md-3">
-								<button type="button" class="btn btn-default" onclick='load(1);'>
-									<span class="glyphicon glyphicon-search" ></span> Buscar</button>
-								<span id="loader"></span>
+						
+			<button type="button" class="btn btn-info btn-responsive" id="limpiar" name="limpiar">LIMPIAR</button>
+							
 							</div>
 							
 						</div>
@@ -158,4 +158,31 @@ $( "#editar_password" ).submit(function( event ) {
 			$("#user_email2").val(email);
 			
 		}
+
+	   $("#limpiar").click(function() {
+    // Limpiar los valores de los campos del formulario
+    $("#q").val("");            // Limpiar el campo de búsqueda
+    
+    // Variables con valores vacíos o predeterminados
+    var q = $("#q").val();      // Capturar búsqueda (vacía)
+
+    // Construir la URL con los parámetros
+    var url = './ajax/buscar_usuarios.php?action=ajax&page=1&q=' + q;
+
+    // Mostrar cargador mientras se actualizan los resultados
+    $("#loader").fadeIn('slow');
+
+    // Realizar la solicitud AJAX
+    $.ajax({
+        url: url,  // Usar la URL construida
+        beforeSend: function(objeto) {
+            $('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');  // Mostrar mensaje de carga
+        },
+        success: function(data) {
+            $(".outer_div").html(data).fadeIn('slow');  // Mostrar los resultados en la tabla
+           $('#datausuario').html(response);
+          //  $('#resultados').html('');
+        }
+    });
+});
 </script>

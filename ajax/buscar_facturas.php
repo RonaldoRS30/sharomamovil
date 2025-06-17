@@ -112,7 +112,7 @@ $q = isset($_REQUEST['q']) ? mysqli_real_escape_string($con, strip_tags($_REQUES
 
     if ($numrows > 0) {
         ?>
-        <div class="table-responsive">
+        <div class="table-responsive" id="datapedidos">
             <table class="table table-striped table-hover table-bordered">
                 <thead class="thead-dark">
                     <tr>

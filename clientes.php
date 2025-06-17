@@ -61,7 +61,18 @@ $title = "Clientes | Order Tracking";
 								<span class="glyphicon glyphicon-search"></span> Buscar</button>
 							<span id="loader"></span>
 						</div> -->
-
+	<style>
+				@media (max-width: 767px) {
+					.btn-responsive {
+					display: block;
+					width: 30%;
+					margin: 10px auto;
+					font-size: 16px;
+					max-width: 150px; /* para que no sea demasiado ancho */
+					}
+				}
+				</style>
+			<button type="button" class="btn btn-info btn-responsive" id="limpiar" name="limpiar">LIMPIAR</button>
 					</div>
 
 				</form>
@@ -77,4 +88,33 @@ $title = "Clientes | Order Tracking";
 	<script type="text/javascript" src="js/clientes.js"></script>
 </body>
 
-</html>
+</html> 
+
+<script>
+	   $("#limpiar").click(function() {
+    // Limpiar los valores de los campos del formulario
+    $("#q").val("");            // Limpiar el campo de búsqueda
+    
+    // Variables con valores vacíos o predeterminados
+    var q = $("#q").val();      // Capturar búsqueda (vacía)
+
+    // Construir la URL con los parámetros
+    var url = './ajax/buscar_clientes.php?action=ajax&page=1&q=' + q;
+
+    // Mostrar cargador mientras se actualizan los resultados
+    $("#loader").fadeIn('slow');
+
+    // Realizar la solicitud AJAX
+    $.ajax({
+        url: url,  // Usar la URL construida
+        beforeSend: function(objeto) {
+            $('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');  // Mostrar mensaje de carga
+        },
+        success: function(data) {
+            $(".outer_div").html(data).fadeIn('slow');  // Mostrar los resultados en la tabla
+           $('#datacliente').html(response);
+          //  $('#resultados').html('');
+        }
+    });
+});
+</script>

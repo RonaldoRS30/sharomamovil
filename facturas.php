@@ -57,7 +57,10 @@ session_start();
         <div class="col-md-2">
             <label>Fin</label>
             <input type="date" class="form-control" id="fecha_fin" onchange="load(1);">
-        </div>
+        </div>  
+        <div class="col-md-2">				
+		<button type="button" class="btn btn-info btn-responsive" id="limpiar" name="limpiar">LIMPIAR</button>				
+		</div>
         <!--<div class="col-md-2">
             <label>Estado</label>
             <select class="form-control" id="tipo_search" onchange="load(1);">
@@ -127,7 +130,6 @@ session_start();
 
 
     </div>
-    <span id="loader"></span>
 </form>
 
 				<div id="resultados"></div><!-- Carga los datos ajax -->
@@ -204,6 +206,44 @@ function obtenerParametros() {
     document.getElementById("pais_search").selectedIndex = 0; // Seleccionar la primera opción
 } */
 
+
+
+	   $("#limpiar").click(function() {
+    // Limpiar los valores de los campos del formulario
+    $("#documentoCliente").val("");            // Limpiar el campo de búsqueda
+        $("#nombreCliente").val("");            // Limpiar el campo de búsqueda
+        $("#fecha_inicio").val("");            // Limpiar el campo de búsqueda
+        $("#fecha_fin").val("");            // Limpiar el campo de búsqueda
+
+    // Variables con valores vacíos o predeterminados
+    var documentoCliente = $("#documentoCliente").val();      // Capturar búsqueda (vacía)
+    var nombreCliente = $("#nombreCliente").val();      // Capturar búsqueda (vacía)
+    var fecha_inicio = $("#fecha_inicio").val();      // Capturar búsqueda (vacía)
+    var fecha_fin = $("#fecha_fin").val();      // Capturar búsqueda (vacía)
+
+    // Construir la URL con los parámetros
+    // Construir la URL con parámetros vacíos (pero correctamente formateada)
+    var url = './ajax/buscar_facturas.php?action=ajax&page=1' +
+              '&documentoCliente=' + encodeURIComponent($("#documentoCliente").val()) +
+              '&nombreCliente=' + encodeURIComponent($("#nombreCliente").val()) +
+              '&fecha_inicio=' + encodeURIComponent($("#fecha_inicio").val()) +
+              '&fecha_fin=' + encodeURIComponent($("#fecha_fin").val());
+    // Mostrar cargador mientras se actualizan los resultados
+    $("#loader").fadeIn('slow');
+
+    // Realizar la solicitud AJAX
+    $.ajax({
+        url: url,  // Usar la URL construida
+        beforeSend: function(objeto) {
+            $('#loader').html('<img src="./img/ajax-loader.gif"> Cargando...');  // Mostrar mensaje de carga
+        },
+        success: function(data) {
+            $(".outer_div").html(data).fadeIn('slow');  // Mostrar los resultados en la tabla
+           $('#datapedidos').html(response);
+          //  $('#resultados').html('');
+        }
+    });
+});
 </script>
 </body>
 

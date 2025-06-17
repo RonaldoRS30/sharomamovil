@@ -81,7 +81,7 @@
 		if ($numrows>0){
 			
 			?>
-		<div class="table-responsive">
+		<div class="table-responsive"  id="datausuario">
     <table class="table table-striped table-bordered">
         <thead class="thead-light">
             <tr>
@@ -141,3 +141,4 @@
 		}
 	}
 ?>
+
